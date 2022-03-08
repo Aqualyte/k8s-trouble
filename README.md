@@ -5,7 +5,7 @@ This section consists of security recommendation for the direct configuration of
 
 # 1.1 Master Node Configuration Files
 
-# API server
+# 1.1.1 API server
 
 - Ensure that the API server pod specification file permissions are set to 644 or more restrictive
 - Ensure that the API server pod specification file ownership is set to root:root
