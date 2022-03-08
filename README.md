@@ -1,6 +1,6 @@
 # k8s-trouble
 
-# 1. Control Panel Components : 
+# 1. Control Panel Components 
 This section consists of security recommendation for the direct configuration of Kubernetes control plane processes. These recommendations may not be directly applicable for cluster operators in environments where these components are managed by a 3rd party. 
 
 # 1.1 Master Node Configuration Files
