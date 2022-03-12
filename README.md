@@ -63,3 +63,58 @@ Run the below command (based on the file location on your system) on the master 
 ```
 chown root:root /etc/kubernetes/manifests/kube-controller-manager.yaml
 ```
+
+# 1.1.3 Schedular
+
+- Ensure that the scheduler pod specification file has permissions of 644 or more restrictive.
+- Ensure that the scheduler pod specification file ownership is set to root:root.
+- The Kubernetes scheduler is a control plane process which assigns Pods to Nodes. The scheduler determines which Nodes are valid placements for each Pod in 
+  the scheduling queue according to constraints and available resources.
+- The scheduler then ranks each valid Node and binds the Pod to a suitable Node.
+- It controls various parameters that set the behavior of the kube-scheduler service in the master node.
+- You should restrict its file permissions to maintain the integrity of the file. The file should be writable by only the administrators on the system. 
+  and the file should be owned by root:root.
+   
+# Audit
+Run the below command (based on the file location on your system) on the master node. and Verify that the permissions are 644 or more restrictive.
+```
+stat -c %a /etc/kubernetes/manifests/kube-scheduler.yaml
+```
+Run the below command (based on the file location on your system) on the master node. and Verify that the ownership is set to root:root.
+```
+stat -c %U:%G /etc/kubernetes/manifests/kube-scheduler.yaml
+```
+
+# Remediation
+Run the below command (based on the file location on your system) on the master node.
+```
+chmod 644 /etc/kubernetes/manifests/kube-scheduler.yaml
+```
+Run the below command (based on the file location on your system) on the master node.
+```
+chown root:root /etc/kubernetes/manifests/kube-scheduler.yaml
+```
+
+# 1.1.4 ETCD
+
+
+
+# Audit
+Run the below command (based on the file location on your system) on the master node. and Verify that the permissions are 644 or more restrictive.
+```
+stat -c %a /etc/kubernetes/manifests/etcd.yaml
+```
+Run the below command (based on the file location on your system) on the master node. and Verify that the ownership is set to root:root.
+```
+stat -c %U:%G /etc/kubernetes/manifests/etcd.yaml
+```
+
+# Remediation
+Run the below command (based on the file location on your system) on the master node.
+```
+chmod 644 /etc/kubernetes/manifests/etcd.yaml
+```
+Run the below command (based on the file location on your system) on the master node.
+```
+chown root:root /etc/kubernetes/manifests/etcd.yaml
+```
