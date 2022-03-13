@@ -123,7 +123,33 @@ chown root:root /etc/kubernetes/manifests/etcd.yaml
 
 # This section contains recommendations relating to API server configuration flags.
 
-# 1.2.1 --anonymous-auth
+# 1.2.1 --authorization-mode argument
+
+- The API Server, can be configured to allow all requests. This mode should not be used on any production cluster.
+- Do not always authorize all requests.
+- The Node authorization mode only allows kubelets to read Secret, ConfigMap, PersistentVolume, and PersistentVolumeClaim objects associated with their nodes.
+- In short you are Restricting kubelet nodes to reading only objects associated with them.
+- By default, Node authorization is not enabled.
+- Turn on Role Based Access Control. 
+
+# Audit
+- Run the following command on the master node and Verify that the --authorization-mode argument exists and is not set to AlwaysAllow. and argument exists and is set 
+  to a value to include Node.
+```
+ps -ef | grep kube-apiserver
+``` 
+
+# Remediation
+
+- Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the master node and set the --authorization-mode parameter 
+  to values other than AlwaysAllow. and set the --authorization-mode parameter to a value that includes Node.
+```
+--authorization-mode=Node,RBAC
+```
+# Impact
+Only authorized requests will be served.
+
+# 1.2.2 --anonymous-auth argument
 
 - When enabled, requests that are not rejected by other configured authentication methods are treated as anonymous requests. These requests are then served by the 
   API server. 
@@ -133,13 +159,13 @@ chown root:root /etc/kubernetes/manifests/etcd.yaml
 - Run the following command on the master node and Verify that the --anonymous-auth argument is set to false.
 ```
 ps -ef | grep kube-apiserver
-```
+``` 
 
 # Remediation
 
-- Edit the API server pod specification file **/etc/kubernetes/manifests/kubeapiserver.yaml** on the master node and set the below parameter. 
+- Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the master node and set the below parameter.
 ```
 --anonymous-auth=false
 ```
 # Impact
-- Anonymous requests will be rejected.
+Anonymous requests will be rejected.
