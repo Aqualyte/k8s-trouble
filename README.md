@@ -97,7 +97,10 @@ chown root:root /etc/kubernetes/manifests/kube-scheduler.yaml
 
 # 1.1.4 ETCD
 
-
+- The etcd pod specification file /etc/kubernetes/manifests/etcd.yaml controls various parameters that set the behavior of the etcd service in the master node. 
+- etcd is a highly available key-value store which Kubernetes uses for persistent storage of all of its REST API object.
+- You should restrict its file permissions to maintain the integrity of the file. 
+- The file should be writable by only the administrators on the system.
 
 # Audit
 Run the below command (based on the file location on your system) on the master node. and Verify that the permissions are 644 or more restrictive.
@@ -130,11 +133,18 @@ chown root:root /etc/kubernetes/manifests/etcd.yaml
 - The Node authorization mode only allows kubelets to read Secret, ConfigMap, PersistentVolume, and PersistentVolumeClaim objects associated with their nodes.
 - In short you are Restricting kubelet nodes to reading only objects associated with them.
 - By default, Node authorization is not enabled.
-- Turn on Role Based Access Control. 
+- Turn on Role Based Access Control.
+
+**RBAC - Role-based access control (RBAC)**
+- It is a method of regulating access to computer or network resources based on the roles of individual users within your organization.
+- allows fine-grained control over the operations that different entities can perform on different objects in the cluster. It is recommended to use the 
+  RBAC authorization mode.
+ 
+ **Example of RBAC : ** https://kubernetes.io/docs/reference/access-authn-authz/rbac/
 
 # Audit
 - Run the following command on the master node and Verify that the --authorization-mode argument exists and is not set to AlwaysAllow. and argument exists and is set 
-  to a value to include Node.
+  to a value to include Node and it include RBAC.
 ```
 ps -ef | grep kube-apiserver
 ``` 
@@ -142,12 +152,13 @@ ps -ef | grep kube-apiserver
 # Remediation
 
 - Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the master node and set the --authorization-mode parameter 
-  to values other than AlwaysAllow. and set the --authorization-mode parameter to a value that includes Node.
+  to values other than AlwaysAllow. and set the --authorization-mode parameter to a value that includes Node and RBAC.
 ```
 --authorization-mode=Node,RBAC
 ```
 # Impact
-Only authorized requests will be served.
+- Only authorized requests will be served.
+- When RBAC is enabled you will need to ensure that appropriate RBAC settings (including Roles, RoleBindings and ClusterRoleBindings) are configured to allow appropriate access.
 
 # 1.2.2 --anonymous-auth argument
 
@@ -169,3 +180,24 @@ ps -ef | grep kube-apiserver
 ```
 # Impact
 Anonymous requests will be rejected.
+
+# 1.2.3 Admission control plugin
+
+- admission plugins that should be enabled in addition to default enabled ones.
+- Limit the Node and Pod objects that a kubelet could modify.
+- Using the NodeRestriction plug-in ensures that the kubelet is restricted to the Node and Pod objects that it could modify as defined. Such kubelets will only 
+  be allowed to modify their own Node API object, and only modify Pod API objects that are bound to their node.
+  
+# Audit
+
+- Run the following command on the master node. and Verify that the --enable-admission-plugins argument is set to a value that includes NodeRestriction.
+```
+ps -ef | grep kube-apiserver
+```
+# Remediation
+
+- Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the master node and set the --enable-admission-plugins 
+  parameter to a value that includes NodeRestriction.
+ ``` 
+--enable-admission-plugins= NodeRestriction
+```
