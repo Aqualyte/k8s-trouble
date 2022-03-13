@@ -118,3 +118,7 @@ Run the below command (based on the file location on your system) on the master 
 ```
 chown root:root /etc/kubernetes/manifests/etcd.yaml
 ```
+
+# 1.2 API Server
+
+**This section contains recommendations relating to API server configuration flags.**
