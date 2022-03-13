@@ -121,4 +121,25 @@ chown root:root /etc/kubernetes/manifests/etcd.yaml
 
 # 1.2 API Server
 
-**This section contains recommendations relating to API server configuration flags.**
+# This section contains recommendations relating to API server configuration flags.
+
+# 1.2.1 --anonymous-auth
+
+- When enabled, requests that are not rejected by other configured authentication methods are treated as anonymous requests. These requests are then served by the 
+  API server. 
+- You should rely on authentication to authorize access and disallow anonymous requests.
+
+# Audit
+- Run the following command on the master node and Verify that the --anonymous-auth argument is set to false.
+```
+ps -ef | grep kube-apiserver
+```
+
+# Remediation
+
+- Edit the API server pod specification file **/etc/kubernetes/manifests/kubeapiserver.yaml** on the master node and set the below parameter. 
+```
+--anonymous-auth=false
+```
+# Impact
+- Anonymous requests will be rejected.
